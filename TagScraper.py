@@ -1,4 +1,3 @@
-from tkinter.messagebox import NO
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -255,9 +254,10 @@ def GetInstaData(tag, cursor="", token="", nextMedias=[]):
 
         res = requests.get(
             'https://www.instagram.com/explore/tags/{}/'.format(tag), headers=headers, cookies=cookies)
-        jsonData = json.loads(re.findall(
-            r'window._sharedData.*?=\s*(.*?)};', res.text, re.DOTALL | re.MULTILINE)[0]+"}")
-        data['token'] = jsonData['config']["csrf_token"]
+        if len(re.findall(r'window._sharedData.*?=\s*(.*?)};', res.text, re.DOTALL | re.MULTILINE)[0]+"}") != 0:
+            jsonData = json.loads(re.findall(
+                r'window._sharedData.*?=\s*(.*?)};', res.text, re.DOTALL | re.MULTILINE)[0]+"}")
+            data['token'] = jsonData['config']["csrf_token"]
         try:
             RecentData = jsonData["entry_data"]["TagPage"][0]["data"]["recent"]
             posts = GetDataFromSections(RecentData["sections"])
@@ -268,6 +268,7 @@ def GetInstaData(tag, cursor="", token="", nextMedias=[]):
                 data["next_url"] = BuildNextInstUrl(
                     tag, next_cursor, data['token'])
         except Exception as e:
+            print("problem with getting data from instagram")
             print(e)
             data = asyncio.run(GetData(tag, cursor, token))
             posts = data["posts"]

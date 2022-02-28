@@ -1,7 +1,10 @@
 import asyncio
-from fastapi import FastAPI, Form
+from fastapi import FastAPI
 import TagScraper
 from fastapi.middleware.cors import CORSMiddleware
+import SearchAPi
+
+
 app = FastAPI()
 origins = [
     "http://localhost.tiangolo.com",
@@ -10,9 +13,12 @@ origins = [
     "http://localhost:8080",
     "http://localhost:3050",
     "http://*:*",
-    "https://*:*",
+    "https://*.*.*",
     "https://invewer.com",
-    "http://invewer.com"
+    "http://invewer.com",
+    "http://www.reegram.com",
+    "https://www.reegram.com",
+
 ]
 
 app.add_middleware(
@@ -33,4 +39,14 @@ def getInitTags(tag: str, cursor: str = "", token: str = ""):
 @app.get("/api/dumpor/tags/{tag}")
 def getInitTagss(tag: str, cursor: str = "", token: str = ""):
     data = asyncio.run(TagScraper.GetData(tag, cursor, token))
+    return data
+
+
+@app.get("/api/search")
+def getSearch(query: str = ""):
+    print(query)
+    if query != "":
+        data = SearchAPi.Search(query)
+    else:
+        data = {"msg": "please search for query use /api/search?query=christiano", }
     return data
