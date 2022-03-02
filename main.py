@@ -3,8 +3,7 @@ from fastapi import FastAPI
 import TagScraper
 from fastapi.middleware.cors import CORSMiddleware
 import SearchAPi
-
-
+import profileApi.ProfileApi as ProfileApi
 app = FastAPI()
 origins = [
     "http://localhost.tiangolo.com",
@@ -49,4 +48,10 @@ def getSearch(query: str = ""):
         data = SearchAPi.Search(query)
     else:
         data = {"msg": "please search for query use /api/search?query=christiano", }
+    return data
+
+
+@app.get("/api/profile/{username}")
+def getInitTags(username: str, cursor: str = "", token: str = ""):
+    data = ProfileApi.GetProfileData(username, username, cursor, token)
     return data
