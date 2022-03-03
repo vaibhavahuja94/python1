@@ -33,6 +33,14 @@ def getNextUrl(soup, token):
             return '/api/profile/{}/?cursor={}&token={}'.format(userId, cursor, token)
         else:
             return None
+    elif loadDiv := soup.find("input", {"class": "pagination-next-page-input"}):
+        if len(l := loadDiv.get("value")) != 0:
+            parser = urllib.parse.parse_qs(l)
+            cursor = parser["end_cursor"][0]
+            userId = parser["id"][0]
+            return '/api/profile/{}/?cursor={}&token={}'.format(userId, cursor, token)
+        else:
+            return None
     else:
         return None
 
@@ -84,7 +92,7 @@ def BuildStories(soup, username):
 def getUserData(soup):
     profile_info = soup.find("div", {"class": "profile-info"})
     userImage = proxyIt(profile_info.find(
-        "div", {"class": "profile-avatar"}).find("img").get("src"))
+        "div", {"class": "profile-avatar"}).find("a").get("data-video-poster"))
     userTitle = profile_info.find(
         "h2", {"class": "profile-name-bottom"}).text.strip()
     userName = profile_info.find(

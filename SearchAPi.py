@@ -1,5 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
+import base64
+
+
+def proxyIt(url):
+    return "https://my-proxy0.herokuapp.com/cdn?url="+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
+
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
@@ -24,7 +31,7 @@ def SearchFromDumpor(query):
     profiles, tags = [], []
     result = {}
     if navProfiles := soup.find("div", {"id": "nav-profiles"}):
-        profiles = [x.text.strip()[1:] for x in navProfiles.find_all(
+        profiles = [{"user": x.text.strip()[1:], "profile":proxyIt(x.find("img").get("src"))} for x in navProfiles.find_all(
             "a", {"class": "profile-name-link"})]
     else:
         raise Exception("no profile nav")
@@ -44,7 +51,7 @@ def SearchFromPicuki(query):
     profiles, tags = [], []
     result = {}
     if navProfiles := soup.find("div", {"id": "search-profile-results"}):
-        profiles = [x.get("title")[1:] for x in navProfiles.find_all(
+        profiles = [{"user": x.get("title")[1:], "profile":proxyIt(x.find("img").get("src"))} for x in navProfiles.find_all(
             "div", {"class": "profile-result"})]
     else:
         raise Exception("no profiles nav picuki")

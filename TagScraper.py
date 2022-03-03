@@ -254,7 +254,8 @@ def GetInstaData(tag, cursor="", token="", nextMedias=[]):
 
         res = requests.get(
             'https://www.instagram.com/explore/tags/{}/'.format(tag), headers=headers, cookies=cookies)
-        if len(re.findall(r'window._sharedData.*?=\s*(.*?)};', res.text, re.DOTALL | re.MULTILINE)[0]+"}") != 0:
+
+        if len(re.findall(r'window._sharedData.*?=\s*(.*?)};', res.text, re.DOTALL | re.MULTILINE)) != 0:
             jsonData = json.loads(re.findall(
                 r'window._sharedData.*?=\s*(.*?)};', res.text, re.DOTALL | re.MULTILINE)[0]+"}")
             data['token'] = jsonData['config']["csrf_token"]
