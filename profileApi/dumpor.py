@@ -69,7 +69,7 @@ async def ExtractPostData(session, Post, showVideo=False):
     if Post.find("div", {"class": "content__img-wrap"}):
         post = {}
         post["medias"] = []
-        post['media_id'] = int(Post.find("a").get("href").split("/")[-1][::-1])
+        post['media_id'] = Post.find("a").get("href").split("/")[-1][::-1]
         if Post.find("div", {"class": "video-icon"}) != None:
             post['post_type'] = "video"
             if showVideo:

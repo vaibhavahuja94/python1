@@ -64,8 +64,7 @@ def getPostData(p):
         return "ad"
     post = {}
     post["medias"] = []
-    post['media_id'] = int(
-        ''.join(re.findall(r'\d+', p.find("a").get("href").split("/")[-1])))
+    post['media_id'] = ''.join(re.findall(r'\d+', p.find("a").get("href").split("/")[-1]))
     if p.find("span", {"class": "flaticon-play-arrow"}):
         post["post_type"] = "video"
     else:
