@@ -4,6 +4,8 @@ import TagScraper
 from fastapi.middleware.cors import CORSMiddleware
 import SearchAPi
 import profileApi.ProfileApi as ProfileApi
+import StoriesApi
+import VideoApi
 app = FastAPI()
 origins = [
     "http://localhost.tiangolo.com",
@@ -54,4 +56,16 @@ def getSearch(query: str = ""):
 @app.get("/api/profile/{username}")
 def getInitTags(username: str, cursor: str = "", token: str = ""):
     data = ProfileApi.GetProfileData(username, username, cursor, token)
+    return data
+
+
+@app.get("/api/stories/{userid}/{username}")
+def getStories(userid, username, token: str = ""):
+    stories = StoriesApi.GetStoriesData(userid, username, token)
+    return {"userid": userid, "username": username, "stories": stories}
+
+
+@app.get("/api/video/{idd}")
+def getInitTags(idd):
+    data = {"video_link": VideoApi.getVideoLink(idd)}
     return data
