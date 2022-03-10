@@ -1,6 +1,7 @@
 import asyncio
 from fastapi import FastAPI
-import TagScraper
+import TagsApi.TagScraper as TagScraper
+import TagsApi.dumpor as dumpor
 from fastapi.middleware.cors import CORSMiddleware
 import SearchAPi
 import profileApi.ProfileApi as ProfileApi
@@ -33,13 +34,13 @@ app.add_middleware(
 
 @app.get("/api/tags/{tag}")
 def getInitTags(tag: str, cursor: str = "", token: str = ""):
-    data = TagScraper.GetInstaData(tag, cursor, token)
+    data = TagScraper.getTags(tag, cursor, token)
     return data
 
 
 @app.get("/api/dumpor/tags/{tag}")
 def getInitTagss(tag: str, cursor: str = "", token: str = ""):
-    data = asyncio.run(TagScraper.GetData(tag, cursor, token))
+    data = asyncio.run(dumpor.GetData(tag, cursor, token))
     return data
 
 
