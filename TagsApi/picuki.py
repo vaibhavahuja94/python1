@@ -97,11 +97,9 @@ def proxyIt(url):
 def getTagsDataFromPicuki(tag, cursor=None, token=None):
     data = {}
     if cursor:
-        # res = requests.get(buildPicukiNextUrl(tag, cursor),
-        #                   headers=headers, cookies=cookies)
-        res = requests.get(
-            'https://app.scrapingbee.com/api/v1/?api_key=GZTIEDN5SURHGAGDRG2RUWTU1N8ZHXZDJOVK2Y120DZTJ6V5B3YSODYGA6Y4A1CONT32WHS5PIDQI1BV&url={}'.format(buildPicukiNextUrl(tag, cursor)))
-        print(len(res.text))
+        res = requests.get(buildPicukiNextUrl(tag, cursor),
+                           headers=headers, cookies=cookies)
+
         if len(res.text) < 100:
             raise Exception("picui")
     else:

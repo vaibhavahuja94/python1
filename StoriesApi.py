@@ -2,6 +2,9 @@ import requests
 import aiohttp
 import asyncio
 from bs4 import BeautifulSoup
+import datetime
+import timeago
+
 import base64
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0',
@@ -19,6 +22,11 @@ headers = {
 }
 
 ###########
+
+
+def GetDateFromTimestamp(timestamp):
+    date = datetime.datetime.fromtimestamp(int(timestamp))
+    return timeago.format(date, datetime.datetime.now())
 
 
 def proxyIt(url):
@@ -40,10 +48,11 @@ async def GetFromSaveFrom(session, UserId):
                     post["type"] = "image"
                     post["url"] = proxyIt(
                         item["image_versions2"]["candidates"][0]["url"])
+                post["time"] = GetDateFromTimestamp(item["taken_at"])
                 stories.append(post)
     except Exception as e:
         return e
-    return stories
+    return stories[::-1]
 
 ##########
 
@@ -66,13 +75,16 @@ async def GetStoriesFromDumpor(session, userid, username, token):
         async with session.get('https://dumpor.com/api/profile/{}/stories?token={}'.format(userid, token)) as r:
             resContent = await r.read()
             soup = BeautifulSoup(resContent, "html.parser")
-            for storyDiv in soup.find("div", {"class": "carousel-inner"}).find_all("div"):
+            ts = soup.find("div", {"class": "stories-container"}
+                           ).find_all("div", {"class": "stories-time"})
+            for i, storyDiv in enumerate(soup.find("div", {"class": "carousel-inner"}).find_all("div")):
                 if storyDiv.find("video") == None:
                     Type = "image"
                 else:
                     Type = "video"
+                time = ts[i].text.strip()
                 url = proxyIt(storyDiv.get("data-src"))
-                stories.append({"url": url, "type": Type})
+                stories.append({"url": url, "type": Type, "time": time})
     return stories
 
 
