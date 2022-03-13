@@ -34,13 +34,13 @@ app.add_middleware(
 )
 
 
-@app.get("/api/tags/{tag}")
+@app.get("/api/tags/{tag}/")
 def getInitTags(tag: str, cursor: str = "", token: str = ""):
     data = TagScraper.getTags(tag, cursor, token)
     return data
 
 
-@app.get("/api/dumpor/tags/{tag}")
+@app.get("/api/dumpor/tags/{tag}/")
 def getInitTagss(tag: str, cursor: str = "", token: str = ""):
     data = asyncio.run(dumpor.GetData(tag, cursor, token))
     return data
@@ -56,13 +56,13 @@ def getSearch(query: str = ""):
     return data
 
 
-@app.get("/api/profile/{username}")
+@app.get("/api/profile/{username}/")
 def getInitTags(username: str, cursor: str = "", token: str = ""):
     data = ProfileApi.GetProfileData(username, username, cursor, token)
     return data
 
 
-@app.get("/api/stories/{userid}/{username}")
+@app.get("/api/stories/{userid}/{username}/")
 def getStories(userid, username, token: str = ""):
     stories = StoriesApi.GetStoriesData(userid, username, token)
     return {"userid": userid, "username": username, "stories": stories}
