@@ -1,3 +1,4 @@
+import profile
 import requests
 from bs4 import BeautifulSoup
 
@@ -26,8 +27,15 @@ def SearchFromDumpor(query):
     profiles, tags = [], []
     result = {}
     if navProfiles := soup.find("div", {"id": "nav-profiles"}):
-        profiles = [{"user": x.text.strip()[1:], "profile":proxyIt(x.find("img").get("src"))} for x in navProfiles.find_all(
-            "a", {"class": "profile-name-link"})]
+        for x in navProfiles.find_all("a", {"class": "profile-name-link"}):
+            u = {}
+            u["user"] = x.text.strip()[1:]
+            if x.find("img"):
+                u["profile"] = proxyIt(x.find("img").get("src"))
+            else:
+                u["profile"] = None
+            profiles.append(u)
+
     else:
         raise Exception("no profile nav")
     if navTags := soup.find("div", {"id": "nav-tags"}):
@@ -46,13 +54,18 @@ def SearchFromPicuki(query):
     profiles, tags = [], []
     result = {}
     if navProfiles := soup.find("div", {"id": "search-profile-results"}):
-        profiles = [{"user": x.get("title")[1:], "profile":proxyIt(x.find("img").get("src"))} for x in navProfiles.find_all(
-            "div", {"class": "profile-result"})]
+        for x in navProfiles.find_all("div", {"class": "profile-result"}):
+            u = {}
+            u["user"] = x.get("title")[1:]
+            if x.find("img"):
+                u["profile"] = proxyIt(x.find("img").get("src"))
+            else:
+                u["profile"] = None
+            profiles.append(u)
     else:
         raise Exception("no profiles nav picuki")
     if navTags := soup.find("div", {"id": "search-tags-results"}):
         tags = [x.text for x in navTags.find_all("a")]
-
     else:
         raise Exception("no tags nav picuki")
     result["profiles"] = profiles
