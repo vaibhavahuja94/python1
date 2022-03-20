@@ -31,7 +31,7 @@ headers = {
 
 
 def getTags(tag, cursor="", token="", nextMedias=[]):
-     try:
+    try:
         return imginn.getTagsFromImginn(tag, cursor)
     except Exception as e:
         print(e)

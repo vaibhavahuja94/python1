@@ -1,3 +1,3 @@
-_pycache_/
-profileApi/_pycache_/
-TagsApi/_pycache_/
+__pycache__
+profileApi/__pycache__
+TagsApi/__pycache__
