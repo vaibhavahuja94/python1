@@ -11,6 +11,7 @@ import base64
 import urllib.parse
 import TagsApi.picuki as picuki
 import TagsApi.dumpor as dumpor
+import TagsApi.imginnorg as imginn
 import TagsApi.instagram as instagram
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0',
@@ -30,6 +31,10 @@ headers = {
 
 
 def getTags(tag, cursor="", token="", nextMedias=[]):
+     try:
+        return imginn.getTagsFromImginn(tag, cursor)
+    except Exception as e:
+        print(e)
     try:
         return picuki.getTagsDataFromPicuki(tag, cursor, token)
     except Exception as e:
