@@ -102,7 +102,7 @@ def getTagsFromImginn(tag=None, cursor=None):
         if res.json()["code"] != 200:
             res = requests.get(buildNexUrl(tag, cursor), headers=headers)
         nextU = getNextUrl(None, res.json(), tag)
-        data['has_next_url'] = True if nextU else False
+        data['has_next_page'] = True if nextU else False
         data["next_url"] = nextU
         data["posts"] = getNextData(res)
 
@@ -111,7 +111,7 @@ def getTagsFromImginn(tag=None, cursor=None):
             "https://imginn.org/tags/{}/".format(tag), headers=headers)
         soup = BeautifulSoup(res.text, "html.parser")
         nextU = getNextUrl(soup, None, tag)
-        data['has_next_url'] = True if nextU else False
+        data['has_next_page'] = True if nextU else False
         data["next_url"] = nextU
         data["posts"] = getPostsJson(soup)
 
