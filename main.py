@@ -22,7 +22,9 @@ origins = [
     "https://www.reegram.com",
     "http://www.smihub.com.co",
     "https://www.smihub.com.co",
-    "http://13.235.239.96:8001"
+    "http://13.235.239.96:8001",
+    "https://www.kiyaso.com",
+    "http://www.kiyaso.com"
 ]
 
 app.add_middleware(
