@@ -4,7 +4,8 @@ import re
 import base64
 import urllib.parse
 import re
-
+import config
+cdn = config.Getcdn()
 cookies = {
     '__atuvc': '11%7C6%2C36%7C7%2C8%7C8%2C43%7C9%2C4%7C10',
     '__atssc': 'google%3B1',
@@ -91,7 +92,7 @@ def getPostData(p):
 
 
 def proxyIt(url):
-    return "https://my-proxy0.herokuapp.com/cdn?url="+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
+    return cdn+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
 
 
 def getTagsDataFromPicuki(tag, cursor=None, token=None):

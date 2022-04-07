@@ -7,6 +7,9 @@ import SearchAPi
 import profileApi.ProfileApi as ProfileApi
 import StoriesApi
 import VideoApi
+import json
+import Trending
+from fastapi.responses import FileResponse
 app = FastAPI()
 origins = [
     "http://localhost.tiangolo.com",
@@ -74,3 +77,13 @@ def getStories(userid, username, token: str = ""):
 def getInitTags(idd):
     data = {"video_link": VideoApi.getVideoLink(idd)}
     return data
+
+
+@app.get("/api/trending/", response_class=FileResponse)
+async def trend():
+    return FileResponse("trend.json")
+
+
+@app.get("/api/updateTrend/")
+def trend():
+    Trending.Update()

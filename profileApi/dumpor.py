@@ -4,7 +4,10 @@ from bs4 import BeautifulSoup
 import asyncio
 import aiohttp
 import base64
+import config
 import urllib.parse
+
+cdn = config.Getcdn()
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0',
@@ -75,12 +78,12 @@ async def ExtractPostData(session, Post, showVideo=False):
             if showVideo:
                 v = await getDumporVideoLink(session, post['media_id'][::-1])
                 post["medias"].append(
-                    {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + ExtractUrlFromDumpor(v), "type": "video"})
+                    {"url": cdn + ExtractUrlFromDumpor(v), "type": "video"})
 
         else:
             post['post_type'] = "image"
         post["medias"].append(
-            {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + ExtractUrlFromDumpor(Post.find("img").get("src")), "type": "image"})
+            {"url": cdn + ExtractUrlFromDumpor(Post.find("img").get("src")), "type": "image"})
         post["content"] = Post.find("div", {"class": "content__text"}).text
         Btns = Post.find("div", {"class": "content__btns"}).find_all("div")
         post["likes"], post["comments"], post["date"] = Btns[0].find(
@@ -135,7 +138,7 @@ def GetUserData(soup):
     user = {}
     if userDiv := soup.find("div", {"class": "user"}):
         userImage = userDiv.find('div', {"class": "user__img"}).get('style')
-        userImage = "https://my-proxy0.herokuapp.com/cdn?url=" + \
+        userImage = cdn + \
             ExtractUrlFromDumpor(
                 userImage[userImage.index("url('")+5:len(userImage)-3])
         userTitle = userDiv.find(

@@ -11,6 +11,7 @@ import base64
 import urllib.parse
 import TagsApi.picuki as picuki
 ##
+cdn = config.Getcdn()
 
 
 def shortcode_to_id(shortcode):
@@ -42,21 +43,21 @@ def GetDataFromSections(sections):
             if "image_versions2" in media["media"].keys():
                 post["post_type"] = "image"
                 post["medias"].append(
-                    {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + EncodeUrl(media["media"]["image_versions2"]["candidates"][0]["url"]), "type": "image"})
+                    {"url": cdn + EncodeUrl(media["media"]["image_versions2"]["candidates"][0]["url"]), "type": "image"})
                 if "video_versions" in media["media"].keys():
                     post["post_type"] = "video"
                     post["medias"].append(
-                        {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + EncodeUrl(media["media"]["video_versions"][0]["url"]), "type": "video"})
+                        {"url": cdn + EncodeUrl(media["media"]["video_versions"][0]["url"]), "type": "video"})
             else:
 
                 post["post_type"] = "image" if media["media"]["carousel_media"][0]["media_type"] == 1 else "video"
                 for carousel in media["media"]["carousel_media"]:
                     if carousel["media_type"] == 1:
                         post["medias"].append(
-                            {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + EncodeUrl(carousel["image_versions2"]["candidates"][0]["url"]), "type": "image"})
+                            {"url": cdn + EncodeUrl(carousel["image_versions2"]["candidates"][0]["url"]), "type": "image"})
                     else:
                         post["medias"].append(
-                            {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + EncodeUrl(carousel["video_versions"][0]["url"]), "type": "video"})
+                            {"url": cdn + EncodeUrl(carousel["video_versions"][0]["url"]), "type": "video"})
             posts.append(post)
     return posts
 

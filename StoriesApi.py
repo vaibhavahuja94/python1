@@ -4,7 +4,7 @@ import asyncio
 from bs4 import BeautifulSoup
 import datetime
 import timeago
-
+import config
 import base64
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0',
@@ -22,6 +22,7 @@ headers = {
 }
 
 ###########
+cdn = config.Getcdn()
 
 
 def GetDateFromTimestamp(timestamp):
@@ -30,7 +31,7 @@ def GetDateFromTimestamp(timestamp):
 
 
 def proxyIt(url):
-    return "https://my-proxy0.herokuapp.com/cdn?url="+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
+    return cdn+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
 
 
 async def GetFromSaveFrom(session, UserId):

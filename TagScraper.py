@@ -25,6 +25,8 @@ headers = {
     'TE': 'trailers',
 }
 
+cdn = config.Getcdn()
+
 
 def ExtractUrlFromDumpor(l):
     parser = urllib.parse.parse_qs(l)
@@ -77,12 +79,12 @@ async def ExtractPostData(session, Post, showVideo=False):
             if showVideo:
                 v = await getDumporVideoLink(session, post['media_id'][::-1])
                 post["medias"].append(
-                    {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + ExtractUrlFromDumpor(v), "type": "video"})
+                    {"url": cdn + ExtractUrlFromDumpor(v), "type": "video"})
 
         else:
             post['post_type'] = "image"
         post["medias"].append(
-            {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + ExtractUrlFromDumpor(Post.find("img").get("src")), "type": "image"})
+            {"url": cdn + ExtractUrlFromDumpor(Post.find("img").get("src")), "type": "image"})
         post["content"] = Post.find("div", {"class": "content__text"}).text
         Btns = Post.find("div", {"class": "content__btns"}).find_all("div")
         post["likes"], post["comments"], post["date"] = Btns[0].find(
@@ -154,21 +156,21 @@ def GetDataFromSections(sections):
             if "image_versions2" in media["media"].keys():
                 post["post_type"] = "image"
                 post["medias"].append(
-                    {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + EncodeUrl(media["media"]["image_versions2"]["candidates"][0]["url"]), "type": "image"})
+                    {"url": cdn + EncodeUrl(media["media"]["image_versions2"]["candidates"][0]["url"]), "type": "image"})
                 if "video_versions" in media["media"].keys():
                     post["post_type"] = "video"
                     post["medias"].append(
-                        {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + EncodeUrl(media["media"]["video_versions"][0]["url"]), "type": "video"})
+                        {"url": cdn + EncodeUrl(media["media"]["video_versions"][0]["url"]), "type": "video"})
             else:
 
                 post["post_type"] = "image" if media["media"]["carousel_media"][0]["media_type"] == 1 else "video"
                 for carousel in media["media"]["carousel_media"]:
                     if carousel["media_type"] == 1:
                         post["medias"].append(
-                            {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + EncodeUrl(carousel["image_versions2"]["candidates"][0]["url"]), "type": "image"})
+                            {"url": cdn + EncodeUrl(carousel["image_versions2"]["candidates"][0]["url"]), "type": "image"})
                     else:
                         post["medias"].append(
-                            {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + EncodeUrl(carousel["video_versions"][0]["url"]), "type": "video"})
+                            {"url": cdn + EncodeUrl(carousel["video_versions"][0]["url"]), "type": "video"})
             posts.append(post)
     return posts
 

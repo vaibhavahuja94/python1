@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import asyncio
 import aiohttp
 import urllib.parse
+import config
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
@@ -18,6 +19,7 @@ headers = {
     'Cache-Control': 'max-age=0',
     'TE': 'trailers',
 }
+cdn = config.Getcdn()
 
 
 def ExtractUrlFromDumpor(l):
@@ -71,12 +73,12 @@ async def ExtractPostData(session, Post, showVideo=False):
             if showVideo:
                 v = await getDumporVideoLink(session, post['media_id'][::-1])
                 post["medias"].append(
-                    {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + ExtractUrlFromDumpor(v), "type": "video"})
+                    {"url": cdn + ExtractUrlFromDumpor(v), "type": "video"})
 
         else:
             post['post_type'] = "image"
         post["medias"].append(
-            {"url": "https://my-proxy0.herokuapp.com/cdn?url=" + ExtractUrlFromDumpor(Post.find("img").get("src")), "type": "image"})
+            {"url": cdn + ExtractUrlFromDumpor(Post.find("img").get("src")), "type": "image"})
         post["content"] = Post.find("div", {"class": "content__text"}).text
         Btns = Post.find("div", {"class": "content__btns"}).find_all("div")
         post["likes"], post["comments"], post["date"] = Btns[0].find(

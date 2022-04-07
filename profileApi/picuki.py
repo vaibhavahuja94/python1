@@ -4,6 +4,7 @@ import re
 import base64
 import urllib.parse
 import re
+import config
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:97.0) Gecko/20100101 Firefox/97.0',
@@ -20,6 +21,7 @@ headers = {
     'Cache-Control': 'max-age=0',
     'TE': 'trailers',
 }
+cdn = config.Getcdn()
 
 
 def getNextUrl(soup, token):
@@ -81,7 +83,7 @@ def getPostData(p):
 
 
 def proxyIt(url):
-    return "https://my-proxy0.herokuapp.com/cdn?url="+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
+    return cdn+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
 
 
 def BuildStories(soup, username):

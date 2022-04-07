@@ -1,10 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 import base64
+import config
+
+cdn = config.Getcdn()
 
 
 def proxyIt(url):
-    return "https://my-proxy0.herokuapp.com/cdn?url="+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
+    return cdn+base64.urlsafe_b64encode(url.encode()).decode("utf-8")
 
 
 headers = {
