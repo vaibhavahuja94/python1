@@ -7,7 +7,7 @@ import SearchAPi
 import profileApi.ProfileApi as ProfileApi
 import StoriesApi
 import VideoApi
-import json
+import Sitemap
 import Trending
 from fastapi.responses import FileResponse
 app = FastAPI()
@@ -26,8 +26,8 @@ origins = [
     "http://www.smihub.com.co",
     "https://www.smihub.com.co",
     "http://13.235.239.96:8001",
-    "https://www.kiyaso.com",
-    "http://www.kiyaso.com"
+    "https://kiyaso.com",
+    "http://kiyaso.com"
 ]
 
 app.add_middleware(
@@ -87,3 +87,13 @@ async def trend():
 @app.get("/api/updateTrend/")
 def trend():
     Trending.Update()
+
+
+@app.get("/api/updateSitmaps/")
+def usitemap():
+    Sitemap.UpdateSitemap()
+
+
+@app.get("/api/sitemaps/sitemap{i}.xml", response_class=FileResponse)
+async def usitmap(i):
+    return FileResponse("Sitemaps/sitemap{}.xml".format(i))
