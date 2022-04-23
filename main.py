@@ -9,6 +9,7 @@ import StoriesApi
 import VideoApi
 import Sitemap
 import Trending
+import RandomProfiles
 from fastapi.responses import FileResponse
 app = FastAPI()
 origins = [
@@ -37,6 +38,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+try:
+    randmProfiles = RandomProfiles.RandomProfiles()
+except Exception as e:
+    print(e)
+    pass
 
 
 @app.get("/api/tags/{tag}/")
@@ -89,7 +95,7 @@ def trend():
     Trending.Update()
 
 
-@app.get("/api/updateSitmaps/")
+@app.get("/api/updateSitemaps/")
 def usitemap():
     Sitemap.UpdateSitemap()
 
@@ -97,3 +103,13 @@ def usitemap():
 @app.get("/api/sitemaps/sitemap{i}.xml", response_class=FileResponse)
 async def usitmap(i):
     return FileResponse("Sitemaps/sitemap{}.xml".format(i))
+
+
+@app.get("/api/randomProfiles/")
+def randomP():
+    return {"Users": randmProfiles.GetRandomProfiles()}
+
+
+@app.get("/api/UpdateRandomProfiles/")
+def randomP():
+    randmProfiles.LoadUsers()
